@@ -1,8 +1,10 @@
 <template>
   <div class="page page--date">
     <div class="date-pickers__types">
-      <div class="btn date-pickers--range" @click="isRange = true, date = null">Range</div>
-      <div class="btn date-pickers--date" @click="isRange = false, range = null">Date</div>
+      <div class="btn date-pickers--range" :class="{ 'selected': isRange }" @click="isRange = true, date = null">Range
+      </div>
+      <div class="btn date-pickers--date" :class="{ 'selected': !isRange }" @click="isRange = false, range = null">
+        Date</div>
     </div>
     <div class="date-pickers">
       <div class="date-pickers__range date-pickers__item">

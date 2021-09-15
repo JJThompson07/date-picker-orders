@@ -83,6 +83,11 @@ button,
       color: var(--female)
     }
   }
+
+  &.selected {
+    background-color: var(--primary);
+    color: white;
+  }
 }
 
 input {

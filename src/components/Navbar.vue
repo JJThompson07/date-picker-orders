@@ -31,7 +31,7 @@ name: "Navbar",
   z-index: 1;
 
   &__title {
-    padding: 1rem;
+    padding: 0.5rem 1rem;
   }
 
   &__links {
