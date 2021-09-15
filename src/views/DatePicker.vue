@@ -30,23 +30,34 @@
     <div v-if="selectedRange && filteredGuests">
       <div class="guests">
         <div v-for="guest in filteredGuests" class="guest">
-          <div class="guest__details">
-            <div class="guest__visited">{{ formatDate(guest.visited) }}</div>
-            <div class="guest__name">
-              {{ guest.first_name }} {{ guest.last_name }}
-              <span class="material-icons" :class="'icon--' + guest.gender.toLowerCase()">{{ guest.gender.toLowerCase()
-                }}</span>
+          <div class="guest__top">
+            <div class="guest__details">
+              <div class="guest__visited">{{ formatDate(guest.visited) }}</div>
+              <div class="guest__name">
+                {{ guest.first_name }} {{ guest.last_name }}
+                <span class="material-icons" :class="'icon--' + guest.gender.toLowerCase()">{{ guest.gender.toLowerCase()
+                  }}</span>
+              </div>
+              <div class="guest__contact">
+                <span class="material-icons small">mail_outline</span>
+                {{ guest.email }}
+              </div>
             </div>
-            <div class="guest__contact">
-              <span class="material-icons small">mail_outline</span>
-              {{ guest.email }}
+            <div class="guest__load-more">
+              <button class="btn" @click="loadMore(guest.id)">
+                Show {{ guest_id == guest.id ? 'less' : 'more' }}
+              </button>
             </div>
           </div>
           <div class="guest__orders" v-if="guest.orders.value.items.length > 0">
             <div class="order__details--title">
               Order Details
             </div>
-            <SingleOrder v-for="order in guest.orders.value.items" :key="order.id" :order="order" class="guest__order"/>
+            <SingleOrder
+                v-for="order in guest.orders.value.items"
+                :key="order.id" :order="order"
+                class="guest__order"
+            />
           </div>
           <Loader v-else />
         </div>
@@ -73,8 +84,9 @@ export default {
     const isRange = ref(true)
     const date = ref(null)
     const range = ref(null)
+    const guest_id = ref(null)
     const selectedRange = ref(null)
-    const { guests, error } = getGuests(selectedRange.value)
+    const { guests, error } = getGuests({limit: '100'})
     const request = ref(null)
 
     const dates = computed(() => {
@@ -130,11 +142,16 @@ export default {
     const filteredGuests = computed( () => {
       let guests = []
       request.value.guests.items.forEach((guest) => {
-        let { orders, err } = getGuestsOrders({guest_id: guest.id})
+        let params = guest.id == guest_id.value ? {guest_id: guest.id, limit: '100'} : {guest_id: guest.id, limit: '2'}
+        let { orders, err } = getGuestsOrders(params)
         guests.push({...guest, orders: orders})
       })
       return guests
     })
+
+    const loadMore = (id) => {
+      guest_id.value = guest_id.value && guest_id.value == id ? null : id
+    }
 
 
     return {
@@ -147,7 +164,9 @@ export default {
       dates,
       min,
       max,
-      formatDate
+      formatDate,
+      loadMore,
+      guest_id
     }
   }
 }
@@ -188,10 +207,24 @@ export default {
     border-radius: 1rem;
     overflow: hidden;
 
-    &__details {
+    &__top {
+      display: flex;
+      flex-flow: row wrap;
       background: white;
+    }
+
+    &__load-more {
+      flex: 1 0 auto;
+      padding: 0.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    &__details {
       padding: 1rem;
       border-radius: 0.5rem 0.5rem 0 0;
+      flex: 1;
     }
 
     &__name {
