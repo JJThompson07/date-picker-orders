@@ -3,12 +3,12 @@ import { ref } from 'vue'
 const getGuests = (range) => {
     const guests = ref({items: []})
     const error = ref(null)
-    const params = ref(null)
+    const params = ref({ limit: '100' })
     const uri = ref(new URL('https://tst-api.feeditback.com/exam.guests'))
     if (range) {
-        params.value = range
-        Object.keys(params.value).forEach(key => uri.value.searchParams.append(key, params.value[key]))
+        params.value = {...range, limit: '100'}
     }
+    Object.keys(params.value).forEach(key => uri.value.searchParams.append(key, params.value[key]))
 
     const loadGuests = async () => {
         // fetch guests data

@@ -3,12 +3,12 @@ import { ref } from 'vue'
 const getGuestsOrders = (id) => {
     const orders = ref({items: []})
     const err = ref(null)
-    const params = ref(null)
+    const params = ref({limit: '100'})
     const uri = ref(new URL('https://tst-api.feeditback.com/exam.guests.orders'))
     if (id) {
-        params.value = id
-        Object.keys(params.value).forEach(key => uri.value.searchParams.append(key, params.value[key]))
+        params.value = {...id, limit: '100'}
     }
+    Object.keys(params.value).forEach(key => uri.value.searchParams.append(key, params.value[key]))
 
     const loadOrders = async () => {
         // fetch orders data
