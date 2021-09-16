@@ -26,5 +26,11 @@ pwa that gives the user a choice between a date range and a single date to selec
 on date selection a result of guests with orders for the selected date/dates will display
 ```
 
+###
+```
+todo - now with limits - would be better to speperate the calls for orders so orders load per guest rather than all 
+guests at one time
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
